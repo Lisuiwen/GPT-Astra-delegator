@@ -1,75 +1,129 @@
 # Setup with AI
 
-Give this file to your coding agent and ask it to install the repository for your local Codex environment.
+Give this file to your coding agent and ask it to install this repository for your local Codex environment.
 
-## Goal
+The agent should perform the setup directly when it has filesystem and terminal access.
 
-Create two isolated behaviors:
+## Objective
+
+Create two isolated behaviors.
 
 ### Normal Codex
-Keep the user's current behavior unchanged.
+
+Keep the user's existing behavior unchanged.
+
 Do not load the GPT-6 delegation policy.
 
-### GPT-6 Orchestrator
+### GPT-6 Astra Orchestrator
+
 When GPT-6 Astra is the primary agent:
-- GPT-6 handles architecture, ambiguity, difficult debugging, cross-module reasoning, and final review.
-- Routine work is delegated to cheaper available agents.
+
+- keep architecture, ambiguity, hard debugging, cross-module reasoning, and final acceptance on GPT-6
+- delegate bounded routine work to cheaper available agents
+- keep repository exploration in cheaper isolated contexts when practical
+- return concise findings to GPT-6 instead of large raw file dumps
 
 Preferred routing:
-- Luna → search, symbol lookup, repository exploration
+
+- Luna → search, symbol lookup, call-chain discovery, repository exploration
 - Terra → mechanical edits, lint, docs, fixed-spec tests
 - Sol → straightforward implementation from a clear spec
-- GPT-6 → hard reasoning and final acceptance
+- GPT-6 Astra → hard reasoning, integration decisions, final review
 
 Do not create unnecessary nested delegation chains.
-For very small tasks, GPT-6 may execute directly.
+For trivial work, direct execution is better than spawning an agent.
 
-## Installation task
+## Installation procedure
 
 Inspect the local environment before changing anything.
 
 Check:
+
 - operating system
-- Codex version
-- existing Codex configuration
+- Codex CLI/Desktop version
+- current Codex configuration
 - supported profile and instruction syntax
 - available models and subagents
-- existing instructions or skills
+- existing instructions, plugins, or skills
+- whether the current host supports model-pinned subagents
 
 Do not assume the example config in this repository matches the installed Codex version.
-Treat `config/gpt6.config.toml` as a template.
-Treat `instructions/gpt6-delegation.md` as the source of truth for behavior.
 
-Requirements:
+Use:
+
+- `instructions/gpt6-delegation.md` as the source of truth for behavior
+- `config/gpt6.config.toml` only as an example template
+
+## Safety requirements
+
 - preserve unrelated existing settings
-- back up files before modifying them
-- do not modify project-level `AGENTS.md`
-- keep the GPT-6 policy isolated from normal models
-- remove or adapt machine-specific paths
-- prefer the simplest officially supported mechanism in the installed Codex version
+- back up every file before modifying it
+- do not modify project-level `AGENTS.md` just to install this policy
+- keep the GPT-6 policy isolated from ordinary model sessions
+- do not copy machine-specific paths from another computer
+- prefer the smallest officially supported mechanism available in the installed Codex version
+- do not invent unsupported config fields
 
-If profile-specific instructions are supported, use them.
-Otherwise create an isolated GPT-6 configuration or launch entry without changing normal Codex behavior.
+If profile-specific instructions are supported, prefer them.
+
+If they are not supported, create the smallest isolated GPT-6 launch/configuration path that preserves normal Codex behavior.
+
+## Context isolation
+
+The purpose is not only to route cheaper work to cheaper models. It is also to keep the GPT-6 parent context compact.
+
+Prefer this:
+
+```text
+cheap explorer
+  → reads many files
+  → returns paths + concise findings
+
+GPT-6 Astra
+  → reads only the files that matter for the decision
+```
+
+Avoid this when unnecessary:
+
+```text
+GPT-6 Astra
+  → scans the whole repository
+  → accumulates large file contents
+  → carries that context through the rest of the task
+```
+
+Do not blindly paste full subagent logs or entire files into the parent thread.
 
 ## Verification
 
-After installation verify:
-1. Normal Codex still works.
-2. Normal models do not receive the GPT-6 delegation policy.
-3. GPT-6 loads the delegation policy.
-4. GPT-6 can delegate to available cheaper agents.
-5. Existing Codex settings still work.
+After installation, verify all of the following:
 
-If possible, run a small delegation test: ask GPT-6 to inspect a small codebase and delegate repository exploration to a cheaper agent, then return only the summarized result.
+1. Normal Codex still works.
+2. Normal model sessions do not receive the GPT-6 delegation policy.
+3. GPT-6 Astra receives the policy in its dedicated mode.
+4. GPT-6 can use the cheaper agents actually available in this environment.
+5. Existing Codex configuration still works.
+6. No hard-coded path points to the original repository author's machine.
+7. A repository exploration task can be delegated without flooding the GPT-6 parent context.
+
+If possible, run a small test:
+
+- ask GPT-6 to inspect a small repository
+- delegate exploration to a cheaper agent
+- have the subagent return only relevant paths and a concise summary
+- confirm GPT-6 performs the final reasoning/review
 
 ## Final report
 
 After setup, report only:
+
 - files created or changed
 - how to start normal Codex
-- how to start GPT-6 orchestrator mode
+- how to start GPT-6 Astra orchestrator mode
+- which models/subagents were actually available
 - whether delegation was verified
+- whether context-isolated exploration was verified
 - any limitations in the installed Codex version
 - how to uninstall or restore the previous configuration
 
-If you have filesystem and terminal access, perform the setup and verification directly instead of only explaining the steps.
+Do not only explain how to install it if you have permission and tools to perform the setup directly.
