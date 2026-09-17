@@ -1,8 +1,14 @@
 # Setup with AI
 
-Give this file to your coding agent and ask it to install this repository for your local Codex environment.
+Give **this file** to a coding agent and ask it to install GPT-6 Astra Context Saver for your local Codex environment.
 
-The agent should perform the setup directly when it has filesystem and terminal access.
+You do not need to clone the repository first.
+
+Repository: `https://github.com/Lisuiwen/codex-gpt6-astra-context`
+
+If you already have the repository locally, use the local copy. Otherwise, when repository files are needed, fetch or clone the repository yourself. Prefer a temporary or tool-managed location unless the user explicitly wants to keep a local clone.
+
+If network access is unavailable, continue with the policy embedded below and clearly report what could not be verified.
 
 ## Objective
 
@@ -11,7 +17,6 @@ Create two isolated behaviors.
 ### Normal Codex
 
 Keep the user's existing behavior unchanged.
-
 Do not load the GPT-6 delegation policy.
 
 ### GPT-6 Astra Orchestrator
@@ -20,7 +25,7 @@ When GPT-6 Astra is the primary agent:
 
 - keep architecture, ambiguity, hard debugging, cross-module reasoning, and final acceptance on GPT-6
 - delegate bounded routine work to cheaper available agents
-- keep repository exploration in cheaper isolated contexts when practical
+- keep broad repository exploration in cheaper isolated contexts when practical
 - return concise findings to GPT-6 instead of large raw file dumps
 
 Preferred routing:
@@ -32,6 +37,34 @@ Preferred routing:
 
 Do not create unnecessary nested delegation chains.
 For trivial work, direct execution is better than spawning an agent.
+
+## Embedded delegation policy
+
+Use this policy if the repository cannot be fetched. If the repository is available, prefer the latest `instructions/gpt6-delegation.md` from the repository as the source of truth.
+
+```text
+You are the primary orchestrator.
+
+Keep on GPT-6:
+- architecture and trade-off decisions
+- ambiguous requirements
+- hard debugging and cross-module reasoning
+- final review and acceptance
+
+Delegate when practical:
+- search, symbol lookup, repository exploration → Luna
+- mechanical edits, lint, docs, fixed-spec tests → Terra
+- straightforward implementation from a clear spec → Sol
+
+Rules:
+- Delegate bounded, low-risk work aggressively.
+- Run independent subtasks in parallel when useful.
+- Keep broad exploration in cheaper isolated contexts.
+- Subagents return relevant paths and concise findings, not raw logs or full-file dumps.
+- Avoid unnecessary nested delegation.
+- GPT-6 owns integration and final acceptance.
+- For trivial tasks, execute directly instead of spawning an agent.
+```
 
 ## Installation procedure
 
@@ -49,7 +82,7 @@ Check:
 
 Do not assume the example config in this repository matches the installed Codex version.
 
-Use:
+If the repository is available, use:
 
 - `instructions/gpt6-delegation.md` as the source of truth for behavior
 - `config/gpt6.config.toml` only as an example template
@@ -63,14 +96,13 @@ Use:
 - do not copy machine-specific paths from another computer
 - prefer the smallest officially supported mechanism available in the installed Codex version
 - do not invent unsupported config fields
+- do not leave a permanent repository clone unless it is actually useful or the user asked for one
 
 If profile-specific instructions are supported, prefer them.
 
 If they are not supported, create the smallest isolated GPT-6 launch/configuration path that preserves normal Codex behavior.
 
 ## Context isolation
-
-The purpose is not only to route cheaper work to cheaper models. It is also to keep the GPT-6 parent context compact.
 
 Prefer this:
 
@@ -103,7 +135,7 @@ After installation, verify all of the following:
 3. GPT-6 Astra receives the policy in its dedicated mode.
 4. GPT-6 can use the cheaper agents actually available in this environment.
 5. Existing Codex configuration still works.
-6. No hard-coded path points to the original repository author's machine.
+6. No hard-coded path points to the repository author's machine.
 7. A repository exploration task can be delegated without flooding the GPT-6 parent context.
 
 If possible, run a small test:
