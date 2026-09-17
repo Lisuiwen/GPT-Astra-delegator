@@ -66,6 +66,33 @@ Then give `SETUP_WITH_AI.md` to your coding agent.
 
 The setup agent should inspect the local Codex version and configuration, back up existing settings, adapt the template, and verify the result instead of blindly copying configuration fields.
 
+## Manual setup
+
+Prefer the AI-assisted setup above unless you already understand your Codex configuration. The exact syntax can change between Codex versions, so verify the fields supported by your installed version before applying them.
+
+| What you need | Example / source | Purpose |
+| --- | --- | --- |
+| GPT-6-only launch path or profile | `config/gpt6.config.toml` | Keeps the delegation policy isolated from normal Codex sessions |
+| Primary model | `gpt-6-astra` | Uses Astra only for high-value reasoning and final acceptance |
+| Reasoning effort | `medium` | Good default balance for long-running tasks; raise only when needed |
+| Delegation instructions | `instructions/gpt6-delegation.md` | Single source of truth for routing and context-isolation behavior |
+| Subagent support | Enable the supported agent/subagent mechanism in your Codex version | Allows Astra to hand bounded work to cheaper models |
+| Default worker | Terra is a reasonable default when supported | Handles mechanical edits and routine execution |
+| Exploration worker | Luna when supported | Handles search, symbol lookup, call-chain discovery, and broad repo exploration |
+| Implementation worker | Sol when supported | Handles straightforward implementation from a clear spec |
+| Delegation depth | Keep it shallow | Avoids GPT-6 → Sol → Terra → Luna chains |
+| Verification | Run one small repo-exploration task | Confirms that normal sessions stay untouched and GPT-6 delegates correctly |
+
+A minimal manual flow is:
+
+1. Back up your current Codex configuration.
+2. Copy or reference `instructions/gpt6-delegation.md` from a GPT-6-only profile or launch path.
+3. Adapt `config/gpt6.config.toml` to the fields actually supported by your installed Codex version.
+4. Keep normal Codex sessions unchanged.
+5. Start GPT-6 mode and verify that repository exploration is delegated while GPT-6 keeps the final reasoning and review.
+
+Do **not** copy the example config blindly. If a field is unsupported in your installed Codex version, use the simplest officially supported equivalent or use `SETUP_WITH_AI.md` and let an agent adapt it for you.
+
 ## Why this saves more than model cost
 
 The second problem is **context growth**.
