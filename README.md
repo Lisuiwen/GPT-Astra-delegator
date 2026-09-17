@@ -1,75 +1,114 @@
 # GPT-6 Astra Context Saver
 
-Use GPT-6 Astra for high-value reasoning. Push routine work and bulky repository exploration into cheaper, isolated subagent contexts.
+**Use GPT-6 Astra for the hard decisions. Let cheaper models do the routine work.**
 
-This repository is intentionally small. It is not a full orchestration framework. It provides a lightweight policy and an AI-readable setup guide for users who want GPT-6 Astra to act more like a tech lead than a worker.
+GPT-6 Astra is excellent at architecture, difficult debugging, ambiguity, and final review. It is also expensive to keep busy with repository exploration, repetitive edits, lint fixes, documentation, and straightforward implementation.
 
-## Why
+This project gives Codex a small GPT-6-specific delegation policy so Astra behaves more like a tech lead than a worker.
 
-Long Codex tasks get expensive for two reasons:
+## The value
 
-1. **Model routing** — GPT-6 spends effort on work that cheaper models can handle.
-2. **Context growth** — GPT-6 reads too many files directly, making later turns increasingly expensive.
-
-The goal is to keep the expensive context small.
+Without delegation:
 
 ```text
 GPT-6 Astra
-  ├─ architecture / ambiguity / hard debugging / final review
-  ├─ Luna  → search and repository exploration
-  ├─ Terra → mechanical edits, lint, docs, fixed-spec tests
-  └─ Sol   → straightforward implementation
+  → search the repo
+  → read dozens of files
+  → make routine edits
+  → write basic tests
+  → fix lint
+  → keep all that context around
 ```
 
-Subagents should return concise findings instead of dumping raw file contents back into the parent context.
+With this setup:
 
-## Quick start
+```text
+GPT-6 Astra
+  → architecture
+  → difficult reasoning
+  → task decomposition
+  → final review
 
-You do not need to understand Codex profiles or configuration files.
+Luna  → search and repository exploration
+Terra → mechanical edits, lint, docs, fixed-spec tests
+Sol   → straightforward implementation
+```
 
-1. Clone or download this repository.
-2. Give [`SETUP_WITH_AI.md`](./SETUP_WITH_AI.md) to your coding agent.
-3. Tell it:
+The goal is simple:
 
-> Install this for my local Codex environment. Inspect my current Codex version and configuration first, adapt the setup to my machine, preserve my normal Codex behavior, and verify the result.
+> **Keep expensive reasoning small.**
 
-The setup agent should inspect the local Codex version and supported configuration mechanisms instead of blindly copying this repository's example config.
+This can reduce wasted GPT-6 usage in long Codex sessions while also keeping the parent context smaller.
 
-## Design goals
+## Fastest setup
 
-- **GPT-6-only policy** — ordinary Codex sessions should not receive these instructions.
-- **Small parent context** — exploration belongs in cheaper isolated contexts when practical.
-- **No unnecessary delegation** — trivial work can stay on the parent.
-- **No delegation chains** — the root orchestrator owns decomposition and acceptance.
-- **Version-aware setup** — configuration is adapted to the installed Codex version.
-- **Minimal surface area** — one behavior file, one setup guide, one config example.
+You do **not** need to understand Codex profiles, config files, or subagent settings.
 
-## Files
+### 1. Clone or download this repository
+
+### 2. Give [`SETUP_WITH_AI.md`](./SETUP_WITH_AI.md) to your coding agent
+
+### 3. Say this
+
+> Install this for my local Codex environment. Preserve my normal Codex setup, make the delegation policy GPT-6-only, adapt it to my installed Codex version, and verify that it works.
+
+That is the intended installation flow.
+
+Your coding agent should inspect your local Codex version and configuration, back up existing settings, adapt the template, and verify the result instead of blindly copying configuration fields.
+
+## Why this saves more than model cost
+
+The second problem is **context growth**.
+
+A long Codex task often becomes expensive because the strongest model keeps reading more files into its own context.
+
+Instead:
+
+```text
+Luna reads 30 files
+        ↓
+returns relevant paths + concise findings
+        ↓
+GPT-6 reads only the files that matter
+```
+
+So the cheaper model handles both the low-value work **and** the bulky exploration context.
+
+## Design principles
+
+- **GPT-6-only** — normal Codex sessions should not receive this policy.
+- **Delegate low-risk work** — search, mechanical edits, routine tests, lint, docs, and straightforward implementation should move down when practical.
+- **Keep context isolated** — broad repository exploration should happen in subagent contexts whenever useful.
+- **No delegation chains** — the root GPT-6 agent owns decomposition and final acceptance.
+- **No unnecessary spawning** — tiny tasks can still be done directly.
+- **Version-aware setup** — let an AI adapt the configuration to the installed Codex version instead of relying on brittle copy-paste config.
+
+## What is in this repository
 
 ```text
 README.md                           project overview
-SETUP_WITH_AI.md                    AI-readable installation guide
+SETUP_WITH_AI.md                    give this file to your coding agent
 config/gpt6.config.toml             example configuration template
 instructions/gpt6-delegation.md     single source of truth for behavior
 LICENSE                             MIT license
 CONTRIBUTING.md                     contribution guide
 ```
 
-## Important note
-
-`config/gpt6.config.toml` is a **template**, not a guaranteed drop-in file. Codex capabilities and configuration syntax can change between versions. The setup agent should inspect the user's installed environment and choose the simplest officially supported mechanism available there.
-
 The authoritative behavior policy is [`instructions/gpt6-delegation.md`](./instructions/gpt6-delegation.md).
 
-## How this differs from larger orchestrators
+`config/gpt6.config.toml` is intentionally only a template. Codex configuration capabilities can change, so the setup agent should choose the simplest supported mechanism available on the user's machine.
 
-Projects such as `codex-astra-luna-orchestrator`, `codex-orchestrator`, and `astral-orchestrator` provide broader routing, verification, modes, installers, and workflow logic.
+## What this project is not
 
-This project deliberately focuses on one narrow problem:
+This is not a full orchestration framework.
 
-> Keep expensive reasoning small.
+There are larger projects that provide workflow engines, verification stages, many routing modes, installers, and broader agent topologies.
 
-It aims to be easy to understand, easy to remove, and easy for another coding agent to install.
+This project deliberately solves one narrow problem:
+
+> **Stop spending GPT-6 on work that does not need GPT-6.**
+
+Minimal policy. Minimal setup. Easy to remove.
 
 ## License
 
