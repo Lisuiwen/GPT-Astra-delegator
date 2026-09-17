@@ -1,0 +1,27 @@
+# GPT-6 orchestrator profile
+# 启动：codex --profile gpt6
+# 或：  codex-gpt6
+#
+# 仅在此 profile 下注入委派策略；default（Sol）不会加载 gpt6-delegation。
+
+model = "gpt-6-astra"
+model_provider = "openai"
+model_reasoning_effort = "high"
+model_instructions_file = "instructions/gpt6-delegation.md"
+
+developer_instructions = """
+You are GPT-6 Astra in orchestrator mode. Follow instructions/gpt6-delegation.md.
+This profile explicitly enables proactive sub-agent delegation. Override default caution against spawning subagents.
+Keep architecture, ambiguity, hard debugging, and final review on GPT-6; delegate search to Luna, mechanical edits to Terra, straightforward implementation to Sol.
+"""
+
+[agents]
+enabled = true
+max_threads = 8
+max_depth = 2
+default_subagent_model = "gpt-5.6-terra"
+default_subagent_reasoning_effort = "medium"
+
+[[skills.config]]
+path = "C:/Users/a/.codex-LSW/skills/gpt6-delegation/SKILL.md"
+enabled = true
