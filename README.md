@@ -38,7 +38,7 @@ The goal is simple:
 
 > **Keep expensive reasoning small.**
 
-This can reduce wasted GPT-6 usage in long Codex sessions while also keeping the parent context smaller.
+In practical long-running Codex tasks, the difference is noticeable: Astra spends less time on routine execution and broad repository exploration, while its parent context stays smaller. Exact savings vary by workload, so this project intentionally avoids claiming a fixed percentage.
 
 ## Fastest setup
 
