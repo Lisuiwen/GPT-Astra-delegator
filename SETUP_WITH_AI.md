@@ -4,7 +4,7 @@ Give **this file** to a coding agent and ask it to install GPT-6 Astra Context S
 
 You do not need to clone the repository first.
 
-Repository: `https://github.com/Lisuiwen/codex-gpt6-astra-context`
+Repository: `https://github.com/Lisuiwen/codex-gpt6-delegator`
 
 If you already have the repository locally, use the local copy. Otherwise, when repository files are needed, fetch or clone the repository yourself. Prefer a temporary or tool-managed location unless the user explicitly wants to keep a local clone.
 

@@ -59,7 +59,7 @@ You do **not** need to clone the repository first.
 If you prefer to inspect everything before installation:
 
 ```bash
-git clone https://github.com/Lisuiwen/codex-gpt6-astra-context.git
+git clone https://github.com/Lisuiwen/codex-gpt6-delegator.git
 ```
 
 Then give `SETUP_WITH_AI.md` to your coding agent.
