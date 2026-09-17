@@ -42,19 +42,29 @@ In practical long-running Codex tasks, the difference is noticeable: Astra spend
 
 ## Fastest setup
 
-You do **not** need to understand Codex profiles, config files, or subagent settings.
+You do **not** need to clone the repository first.
 
-### 1. Clone or download this repository
+### Recommended: one-file install
 
-### 2. Give [`SETUP_WITH_AI.md`](./SETUP_WITH_AI.md) to your coding agent
-
-### 3. Say this
+1. Download [`SETUP_WITH_AI.md`](./SETUP_WITH_AI.md).
+2. Give that file to your coding agent.
+3. Say:
 
 > Install this for my local Codex environment. Preserve my normal Codex setup, make the delegation policy GPT-6-only, adapt it to my installed Codex version, and verify that it works.
 
-That is the intended installation flow.
+`SETUP_WITH_AI.md` is self-contained. It includes the repository URL, the core delegation policy, and instructions for the agent to fetch or clone the repository automatically only when additional files are needed.
 
-Your coding agent should inspect your local Codex version and configuration, back up existing settings, adapt the template, and verify the result instead of blindly copying configuration fields.
+### Alternative: clone first
+
+If you prefer to inspect everything before installation:
+
+```bash
+git clone https://github.com/Lisuiwen/codex-gpt6-astra-context.git
+```
+
+Then give `SETUP_WITH_AI.md` to your coding agent.
+
+The setup agent should inspect the local Codex version and configuration, back up existing settings, adapt the template, and verify the result instead of blindly copying configuration fields.
 
 ## Why this saves more than model cost
 
@@ -87,7 +97,7 @@ So the cheaper model handles both the low-value work **and** the bulky explorati
 
 ```text
 README.md                           project overview
-SETUP_WITH_AI.md                    give this file to your coding agent
+SETUP_WITH_AI.md                    standalone AI-readable installer guide
 config/gpt6.config.toml             example configuration template
 instructions/gpt6-delegation.md     single source of truth for behavior
 LICENSE                             MIT license
