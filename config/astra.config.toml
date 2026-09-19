@@ -1,0 +1,30 @@
+# Astra tiered orchestrator profile template.
+# Adapt the model IDs below to the models available in the installed Codex version.
+# The role names (astra, sol, terra, luna) are the stable routing interface.
+
+# Primary Astra binding. This example uses the current Astra model ID.
+model = "gpt-6-astra"
+model_provider = "openai"
+model_reasoning_effort = "medium"
+model_instructions_file = "../instructions/astra-delegation.md"
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 8
+default_subagent_model = "gpt-5.6-terra"
+default_subagent_reasoning_effort = "medium"
+
+[agents.luna]
+description = "Luna tier: explore repositories, search symbols, and trace call chains. Return concise findings and relevant paths."
+config_file = "./luna.config.toml"
+
+[agents.terra]
+description = "Terra tier: perform mechanical edits, documentation updates, lint fixes, and fixed-spec tests."
+config_file = "./terra.config.toml"
+
+[agents.sol]
+description = "Sol tier: implement a clear, bounded specification without changing unrelated behavior."
+config_file = "./sol.config.toml"
+
+# The root profile is the Astra tier. The three named agent roles above are
+# the only delegation levels configured by this example.

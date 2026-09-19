@@ -1,0 +1,5 @@
+# Sol tier binding: clear, bounded implementation.
+# Replace only the model ID if the installed catalog uses another compatible ID.
+model = "gpt-5.6-sol"
+model_provider = "openai"
+model_reasoning_effort = "medium"
