@@ -1,10 +1,22 @@
-# Astra Context Saver
+# Astra Delegator — Codex skill to save GPT-6 Astra quota by tiered delegation
 
-**Use Astra for the hardest decisions. Let Sol, Terra, and Luna handle bounded work at the right tier.**
+**Use GPT-6 Astra for the hardest decisions. Let Codex delegate bounded work to Sol, Terra, and Luna so Astra's context and quota stay on work that needs them.**
 
 Astra is strongest at architecture, difficult debugging, ambiguity, and final review. It is expensive to keep busy with repository exploration, repetitive edits, lint fixes, documentation, and straightforward implementation.
 
-This project gives Codex a small, tiered delegation policy so Astra behaves more like a tech lead than a worker.
+Astra Delegator gives Codex a small, tiered delegation policy so Astra behaves more like a tech lead than a worker.
+
+## Who this is for
+
+- Codex users who want GPT-6 Astra quota spent on hard reasoning, not repo search and routine edits
+- People who already have cheaper models (Sol, Terra, Luna, or equivalents) and want a small routing policy
+- Anyone who sees Astra's parent context fill up with exploration and mechanical work
+
+## Who this is not for
+
+- Anyone looking for a full orchestration framework, workflow engine, or packaged installer
+- Setups with no Codex, no Astra, or no lower-tier models to delegate to
+- Anyone expecting a guaranteed savings percentage
 
 ## The value
 
