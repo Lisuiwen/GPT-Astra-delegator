@@ -1,10 +1,19 @@
-# Astra Delegator — Codex skill for tiered delegation on Astra
+# Astra Delegator
 
-**Use Astra for the hardest decisions and high-precision multimodal work. Delegate bounded exploration and routine implementation to Luna and Sol so Astra's context and quota stay on work that needs them.**
+Codex skill: **Astra orchestrator** with tiered delegation to **Luna** (explore) and **Sol** (mechanical work + implementation). Keeps **multimodal and hard reasoning on Astra**.
 
-Astra is strongest at architecture, difficult debugging, ambiguity, multimodal analysis, and final review. It is expensive to keep busy with repository exploration, repetitive edits, lint fixes, documentation, and straightforward implementation.
+Use Astra for architecture, ambiguity, difficult debugging, high-precision multimodal work, integration, and final acceptance. Delegate bounded exploration and routine implementation to Luna and Sol so Astra's context and quota stay on work that needs them.
 
-Astra Delegator gives Codex a small, tiered delegation policy so Astra behaves more like a tech lead than a worker.
+## Role routing
+
+| Role | Agent | Responsibility |
+| --- | --- | --- |
+| **Astra** | primary orchestrator | architecture, ambiguity, hard debugging, integration, high-precision multimodal work, final acceptance |
+| **Luna** | `luna_scout` | read-only exploration, search, symbol lookup, call-chain discovery |
+| **Sol** | `sol_worker` | mechanical edits, lint, docs, fixed-spec tests |
+| **Sol** | `sol_implementer` | straightforward implementation from a clear spec |
+
+Astra does not delegate multimodal or vision-heavy tasks unless the needed facts are already extracted.
 
 ## Who this is for
 
@@ -15,7 +24,7 @@ Astra Delegator gives Codex a small, tiered delegation policy so Astra behaves m
 ## Who this is not for
 
 - Anyone looking for a full orchestration framework, workflow engine, or packaged installer
-- Setups with no Codex, no Astra, or no lower-tier models to delegate to
+- Setups with no Codex, no Astra, or no Luna/Sol bindings to delegate to
 - Anyone expecting a guaranteed savings percentage
 
 ## The value
@@ -42,16 +51,16 @@ Astra
   → task decomposition
   → final review
 
-Luna            → search and repository exploration (luna_scout)
-Sol             → mechanical edits and routine execution (sol_worker)
-Sol             → straightforward implementation (sol_implementer)
+Luna  → search and repository exploration
+Sol   → mechanical edits and routine execution
+Sol   → straightforward implementation
 ~~~
 
 The goal is simple:
 
 > **Keep expensive reasoning small.**
 
-The role names are stable. The model IDs in the agent files are bindings that can be updated for the models available in the current Codex installation.
+The role names are the stable contract. The model bindings in the TOML files can be updated for whatever IDs your Codex installation exposes for Astra, Luna, and Sol.
 
 ## Fastest setup
 
@@ -69,8 +78,6 @@ SETUP_WITH_AI.md is self-contained. It includes the repository URL, the core del
 
 ### Alternative: clone first
 
-If you prefer to inspect everything before installation:
-
 ~~~
 git clone https://github.com/Lisuiwen/GPT-Astra-delegator.git
 ~~~
@@ -81,81 +88,74 @@ The setup agent should inspect the local Codex version and configuration, back u
 
 ## Manual setup
 
-Prefer the AI-assisted setup above unless you already understand your Codex configuration.
-
-| What you need | Example / source | Purpose |
+| What you need | Source | Purpose |
 | --- | --- | --- |
-| Astra profile | config/astra.config.toml | Isolates the tiered delegation policy from normal Codex sessions |
-| Primary tier | `model = "gpt-6-astra"` in the example | Binds the Astra tier; replace if another Astra model ID is available |
-| Delegation instructions | instructions/delegation.md | Single source of truth for routing and context isolation |
-| Luna agent | agents/luna-scout.toml | Exploration, search, symbol lookup, and call-chain discovery |
-| Sol worker | agents/sol-worker.toml | Mechanical edits, lint, docs, and fixed-spec tests |
-| Sol implementer | agents/sol-implementer.toml | Straightforward implementation from a clear specification |
-| Subagent support | Enable the supported agent/subagent mechanism in your Codex version | Allows Astra to hand bounded work to lower tiers |
+| Astra profile | `config/astra.config.toml` | Orchestrator profile and delegation policy |
+| Delegation policy | `instructions/delegation.md` | Single source of truth for routing and context isolation |
+| Luna agent | `agents/luna-scout.toml` | Exploration, search, symbol lookup, call-chain discovery |
+| Sol worker | `agents/sol-worker.toml` | Mechanical edits, lint, docs, fixed-spec tests |
+| Sol implementer | `agents/sol-implementer.toml` | Straightforward implementation from a clear specification |
+| Subagent support | Codex multi-agent / subagent mechanism | Lets Astra hand bounded work to Luna and Sol |
 | Delegation depth | `max_depth = 1` | Avoids nested delegation chains |
-| Verification | Run one small repo-exploration task | Confirms normal sessions stay untouched and tiered delegation works |
 
-A minimal manual flow is:
+Minimal flow:
 
 1. Back up your current Codex configuration.
 2. Copy `agents/*.toml` into your Codex agents directory.
 3. Copy or merge `config/astra.config.toml` and `instructions/delegation.md` into your Codex profile or `config.toml`.
 4. Keep normal Codex sessions unchanged unless you want orchestration by default.
-5. Start the Astra profile with `codex --profile astra` and verify delegation.
+5. Start Astra mode with `codex --profile astra` and verify delegation.
 
-Do not copy the example config blindly. If a field or model ID is unsupported in your installed Codex version, use the simplest officially supported equivalent or use SETUP_WITH_AI.md and let an agent adapt it for you.
+Do not copy the example config blindly. If a field or model binding is unsupported in your installed Codex version, use the simplest officially supported equivalent or use SETUP_WITH_AI.md and let an agent adapt it for you.
 
 ## Why this saves more than model cost
 
 The second problem is context growth.
 
-A long Codex task often becomes expensive because the strongest model keeps reading more files into its own context.
+A long Codex task often becomes expensive because Astra keeps reading more files into its own context.
 
 Instead:
 
 ~~~
-Luna reads 30 files
+Luna reads many files
         ↓
 returns relevant paths + concise findings
         ↓
 Astra reads only the files that matter for the decision
 ~~~
 
-So the lower tier handles both the low-value work and the bulky exploration context.
+So Luna and Sol handle both the low-value work and the bulky exploration context.
 
 ## Design principles
 
-- Astra-first — Astra owns architecture, multimodal analysis, integration, and final acceptance.
-- Tiered delegation — Luna explores; Sol handles mechanical work and clear bounded implementation.
-- Delegate low-risk work — search, mechanical edits, routine tests, lint, docs, and straightforward implementation should move down when practical.
-- Keep context isolated — broad repository exploration should happen in subagent contexts whenever useful.
-- No delegation chains — the root Astra agent owns decomposition and final acceptance.
-- No unnecessary spawning — tiny tasks can still be done directly.
-- Version-aware setup — let an AI adapt the configuration and model bindings to the installed Codex catalog.
+- **Astra-first** — Astra owns architecture, multimodal analysis, integration, and final acceptance.
+- **Tiered delegation** — Luna explores; Sol handles mechanical work and clear bounded implementation.
+- **Delegate low-risk work** — search, mechanical edits, routine tests, lint, docs, and straightforward implementation should move down when practical.
+- **Keep context isolated** — broad repository exploration should happen in subagent contexts whenever useful.
+- **No delegation chains** — the root Astra agent owns decomposition and final acceptance.
+- **No unnecessary spawning** — tiny tasks can still be done directly.
 
-## What is in this repository
+## Repository layout
 
 ~~~
-README.md                    project overview
-SETUP_WITH_AI.md             standalone AI-readable installer guide
-config/astra.config.toml     Astra orchestrator profile
-agents/luna-scout.toml       Luna exploration agent
-agents/sol-worker.toml       Sol mechanical-work agent
-agents/sol-implementer.toml  Sol implementation agent
-instructions/delegation.md   single source of truth for behavior
-LICENSE                      MIT license
-CONTRIBUTING.md              contribution guide
+README.md
+SETUP_WITH_AI.md
+config/astra.config.toml
+agents/luna-scout.toml
+agents/sol-worker.toml
+agents/sol-implementer.toml
+instructions/delegation.md
+LICENSE
+CONTRIBUTING.md
 ~~~
 
-The authoritative behavior policy is instructions/delegation.md.
+The authoritative behavior policy is `instructions/delegation.md`.
 
-The TOML files are templates. Codex configuration capabilities and model IDs can change, so the setup agent should choose the simplest supported mechanism available on the user's machine.
+The TOML files are templates. Adapt them to the Codex capabilities and model bindings available on your machine.
 
 ## What this project is not
 
 This is not a full orchestration framework.
-
-There are larger projects that provide workflow engines, verification stages, many routing modes, installers, and broader agent topologies.
 
 This project deliberately solves one narrow problem:
 
