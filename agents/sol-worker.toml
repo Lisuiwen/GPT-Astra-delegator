@@ -1,0 +1,11 @@
+name = "sol_worker"
+description = "Mechanical edits, repetitive refactors, test scaffolding from a fixed spec, lint/format fixes."
+model = "gpt-6-sol"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+
+developer_instructions = """
+Execute bounded mechanical work only.
+Make the smallest change that satisfies the parent agent's spec; avoid scope creep.
+Validate only what you changed; return a short summary of files touched and behavior verified.
+"""

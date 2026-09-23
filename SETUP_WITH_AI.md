@@ -16,52 +16,54 @@ Create two isolated behaviors.
 
 ### Normal Codex
 
-Keep the user's existing behavior unchanged.
-Do not load the Astra tiered delegation policy.
+Keep the user's existing behavior unchanged unless they explicitly want orchestration by default.
+Do not load the Astra tiered delegation policy into ordinary sessions unless requested.
 
 ### Astra Orchestrator
 
 When Astra is the primary tier:
 
-- keep architecture, ambiguity, hard debugging, cross-module reasoning, and final acceptance on Astra
+- keep architecture, ambiguity, hard debugging, cross-module reasoning, high-precision multimodal work, and final acceptance on Astra
 - delegate bounded routine work to lower tiers
 - keep broad repository exploration in cheaper isolated contexts when practical
 - return concise findings to Astra instead of large raw file dumps
 
 Preferred routing:
 
-- Luna → search, symbol lookup, call-chain discovery, repository exploration
-- Terra → mechanical edits, lint, docs, fixed-spec tests
-- Sol → straightforward implementation from a clear spec
-- Astra → hard reasoning, integration decisions, final review
+- Luna → search, symbol lookup, call-chain discovery, repository exploration (`luna_scout`)
+- Sol → mechanical edits, lint, docs, fixed-spec tests (`sol_worker`)
+- Sol → straightforward implementation from a clear spec (`sol_implementer`)
+- Astra → hard reasoning, multimodal analysis, integration decisions, final review
 
 Do not create unnecessary nested delegation chains.
 For trivial work, direct execution is better than spawning an agent.
 
 ## Embedded delegation policy
 
-Use this policy if the repository cannot be fetched. If the repository is available, prefer the latest instructions/astra-delegation.md from the repository as the source of truth.
+Use this policy if the repository cannot be fetched. If the repository is available, prefer the latest `instructions/delegation.md` from the repository as the source of truth.
 
 ~~~
-You are the Astra-tier primary orchestrator.
+You are the primary orchestrator on Astra.
 
 Keep on Astra:
 - architecture and trade-off decisions
 - ambiguous requirements
 - hard debugging and cross-module reasoning
 - integration decisions
+- high-precision multimodal work (screenshots, images, UI/visual analysis, document figures)
 - final review and acceptance
 
 Delegate when practical:
-- search, symbol lookup, repository exploration → Luna
-- mechanical edits, lint, docs, fixed-spec tests → Terra
-- straightforward implementation from a clear spec → Sol
+- search, symbol lookup, repository exploration → luna_scout (Luna)
+- mechanical edits, lint, docs, fixed-spec tests → sol_worker (Sol)
+- straightforward implementation from a clear spec → sol_implementer (Sol)
 
 Rules:
 - Delegate bounded, low-risk work aggressively.
 - Run independent subtasks in parallel when useful.
 - Keep broad exploration in cheaper isolated contexts.
 - Subagents return relevant paths and concise findings, not raw logs or full-file dumps.
+- Do not delegate multimodal or vision-heavy tasks unless facts are already extracted.
 - Avoid unnecessary nested delegation.
 - Astra owns integration and final acceptance.
 - For trivial tasks, execute directly instead of spawning an agent.
@@ -85,9 +87,9 @@ Do not assume the example config in this repository matches the installed Codex 
 
 If the repository is available, use:
 
-- instructions/astra-delegation.md as the source of truth for behavior
-- config/astra.config.toml as the profile and role declaration
-- config/astra.config.toml, config/sol.config.toml, config/terra.config.toml, and config/luna.config.toml as model-binding examples
+- `instructions/delegation.md` as the source of truth for behavior
+- `config/astra.config.toml` as the orchestrator profile
+- `agents/luna-scout.toml`, `agents/sol-worker.toml`, and `agents/sol-implementer.toml` as subagent definitions
 
 Map the role names to model IDs actually available in the environment. Keep the role names stable even when model IDs change.
 
@@ -96,7 +98,7 @@ Map the role names to model IDs actually available in the environment. Keep the 
 - preserve unrelated existing settings
 - back up every file before modifying it
 - do not modify project-level AGENTS.md just to install this policy
-- keep the Astra policy isolated from ordinary model sessions
+- keep the Astra policy isolated from ordinary model sessions unless the user wants it by default
 - do not copy machine-specific paths from another computer
 - prefer the smallest officially supported mechanism available in the installed Codex version
 - do not invent unsupported config fields
@@ -135,9 +137,9 @@ Do not blindly paste full subagent logs or entire files into the parent thread.
 After installation, verify all of the following:
 
 1. Normal Codex still works.
-2. Normal model sessions do not receive the Astra delegation policy.
+2. Normal model sessions do not receive the Astra delegation policy unless configured to do so.
 3. The Astra tier receives the policy in its dedicated mode.
-4. Astra can use Sol, Terra, and Luna when those bindings are available.
+4. Astra can use Luna and Sol when those bindings are available.
 5. Existing Codex configuration still works.
 6. No hard-coded path points to the repository author's machine.
 7. A repository exploration task can be delegated without flooding the Astra parent context.
@@ -145,7 +147,7 @@ After installation, verify all of the following:
 If possible, run a small test:
 
 - ask Astra to inspect a small repository
-- delegate exploration to Luna
+- delegate exploration to `luna_scout`
 - have Luna return only relevant paths and a concise summary
 - confirm Astra performs the final reasoning/review
 
@@ -155,8 +157,8 @@ After setup, report only:
 
 - files created or changed
 - how to start normal Codex
-- how to start Astra orchestrator mode
-- which model IDs were bound to Astra, Sol, Terra, and Luna
+- how to start Astra orchestrator mode (`codex --profile astra`)
+- which model IDs were bound to Astra, Luna, and Sol
 - whether delegation was verified
 - whether context-isolated exploration was verified
 - any limitations in the installed Codex version

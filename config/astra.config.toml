@@ -1,30 +1,24 @@
-# Astra tiered orchestrator profile template.
-# Adapt the model IDs below to the models available in the installed Codex version.
-# The role names (astra, sol, terra, luna) are the stable routing interface.
+# Astra orchestrator profile.
+# Adapt model IDs to the models available in the installed Codex catalog.
 
-# Primary Astra binding. This example uses the current Astra model ID.
 model = "gpt-6-astra"
 model_provider = "openai"
-model_reasoning_effort = "medium"
-model_instructions_file = "../instructions/astra-delegation.md"
+model_reasoning_effort = "xhigh"
+developer_instructions = """
+You are the primary orchestrator on Astra.
+Delegate bounded search/exploration to luna_scout, mechanical edits to sol_worker, and straightforward implementation to sol_implementer.
+Keep architecture, ambiguity, hard debugging, integration, high-precision multimodal work (screenshots, images, UI/visual analysis, document figures, and other vision-heavy tasks), and final acceptance on Astra.
+Do not delegate multimodal or vision-heavy tasks to subagents unless the parent agent has already extracted the needed facts.
+Return concise subagent summaries; do not import raw logs.
+"""
 
 [agents]
 enabled = true
-max_concurrent_threads_per_session = 8
-default_subagent_model = "gpt-5.6-terra"
-default_subagent_reasoning_effort = "medium"
+max_threads = 8
+max_depth = 1
 
-[agents.luna]
-description = "Luna tier: explore repositories, search symbols, and trace call chains. Return concise findings and relevant paths."
-config_file = "./luna.config.toml"
-
-[agents.terra]
-description = "Terra tier: perform mechanical edits, documentation updates, lint fixes, and fixed-spec tests."
-config_file = "./terra.config.toml"
-
-[agents.sol]
-description = "Sol tier: implement a clear, bounded specification without changing unrelated behavior."
-config_file = "./sol.config.toml"
-
-# The root profile is the Astra tier. The three named agent roles above are
-# the only delegation levels configured by this example.
+# Role mapping:
+#   luna_scout      -> Luna  (exploration / search)
+#   sol_worker      -> Sol   (mechanical edits)
+#   sol_implementer -> Sol   (straightforward implementation)
+# Astra retains high-precision multimodal and orchestration work.

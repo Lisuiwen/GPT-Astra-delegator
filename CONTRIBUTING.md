@@ -6,7 +6,7 @@ Contributions are welcome, but keep the project deliberately small.
 
 Changes should support at least one of these goals:
 
-- keep Astra focused on high-value reasoning
+- keep Astra focused on high-value reasoning and multimodal work
 - route bounded routine work to the right lower tier
 - reduce unnecessary growth of the Astra parent context
 - keep setup simple and reversible
@@ -18,11 +18,11 @@ Please check that your change:
 
 1. does not duplicate the delegation policy across multiple files
 2. does not add machine-specific absolute paths
-3. preserves normal Codex behavior outside the Astra setup
+3. preserves normal Codex behavior outside the Astra setup unless explicitly documented
 4. does not assume unsupported Codex configuration fields without verification
 5. keeps user-facing instructions in English
 6. keeps the setup process understandable by another coding agent
-7. preserves the Astra/Sol/Terra/Luna role contract
+7. preserves the Astra / Luna / Sol role contract
 
 ## Scope
 
@@ -37,7 +37,7 @@ Keep pull requests focused. Explain:
 - the problem being solved
 - why the change belongs in this repository
 - how it affects normal Codex sessions
-- how it affects Astra, Sol, Terra, and Luna routing
+- how it affects Astra, Luna, and Sol routing
 - how it was tested
 
 If the change depends on a specific Codex version or host capability, state that explicitly.
